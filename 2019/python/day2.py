@@ -16,6 +16,7 @@ def run(pgm, noun, verb):
 with open('../day_2.txt', 'r') as f:
     pgm = [int(s) for s in f.read().rstrip().split(',')]
 
+print('part 1:', run(pgm, 12, 2))
 
 r = next(n*100+v for n in range(100) for v in range(100) if run(pgm, n, v) == 19690720)
-print(r)
+print('part 2:', r)

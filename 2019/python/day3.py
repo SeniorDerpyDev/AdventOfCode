@@ -21,5 +21,6 @@ with open('../day_3.txt') as f:
 d1 = turtle(wire1)
 d2 = turtle(wire2)
 crossings = d1.keys() & d2.keys()
-result = min(d1[p] + d2[p] for p in crossings)
-print(result)
+
+print('part 1:', min(abs(x) + abs(y) for (x,y) in crossings))
+print('part 2:', min(d1[p] + d2[p] for p in crossings))
