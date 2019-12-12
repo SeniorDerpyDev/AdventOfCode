@@ -1,3 +1,4 @@
+import re
 from itertools import combinations
 from math import gcd
 
@@ -5,7 +6,8 @@ X_AXIS, Y_AXIS, Z_AXIS = 0, 1, 2
 
 # moon = [x, y, z, Vx, Vy, Vz]
 def get_initial_state():
-    return [ [10, 15, 7, 0, 0, 0], [15, 10, 0, 0, 0, 0], [20, 12, 3, 0, 0, 0], [0, -3, 13, 0, 0, 0] ]
+    with open('../day_12.txt') as f:
+        return [[int(match) for match in re.findall(r'-?\d+', line)] + [0, 0, 0] for line in f]
 
 def simulate(moons, axes):
     for (m0, m1) in combinations(moons, 2):
@@ -26,6 +28,7 @@ for _ in range(1000):
 total_energy = sum( sum(abs(v) for v in m[0:3]) * sum(abs(v) for v in m[3:6]) for m in moons )
 print('part 1:', total_energy)
 
+
 def period(axis):
     steps = 0
     moons = get_initial_state()
@@ -41,5 +44,4 @@ def period(axis):
 def lcm(a, b):
     return a * b // gcd(a, b)
 
-x, y, z = (period(axis) for axis in [X_AXIS, Y_AXIS, Z_AXIS])
-print('part 2:', lcm(lcm(x, y), z))
+print('part 2:', lcm(lcm(period(X_AXIS), period(Y_AXIS)), period(Z_AXIS)))
