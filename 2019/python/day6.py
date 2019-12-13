@@ -19,7 +19,7 @@ def get_orbits_for_satellite(s):
 
 you = set(get_orbits_for_satellite('YOU'))
 santa = set(get_orbits_for_satellite('SAN'))
-transfers = len(you - santa) + len(santa - you)
+transfers = len(you ^ santa)
 
 print('part 1:', orbit_count)
 print('part 2:', transfers)
