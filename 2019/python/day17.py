@@ -125,50 +125,37 @@ def get_moves(scaffolding):
         move = get_next_move()
     return moves
 
-def remove_segments(lst, segs, r):
-    tmp = lst[:]
-    for (b, e) in reversed(segs):
-        tmp[b:e] = [r]
-    return tmp
-
-def find_segments(lst):
+def reduce(lst, sub):
     candidates = []
-    l = len(lst) // 2
-    s = 0
-    while lst[s] in 'ABC':
-        s += 1
-    while any(c in lst[s:s+l] for c in 'ABC'):
-        l -= 1
-    while l > 1:
-        b = s + l
-        segments = [(s, s+l)]
-        while b + l <= len(lst):
-            if lst[s:s+l] == lst[b:b+l]:
-                segments.append((b, b+l))
-                b += l
-            else:
-                b += 1
-        l -= 1
-        if len(segments) > 1:
-            candidates.append(segments)
+    size = 11   # each line has max size of 20 chars including ',' (11 chars + 9 ',')
+    i = 0
+    while lst[i] in 'ABC':
+        i += 1
+    while any(c in lst[i : i+size] for c in 'ABC'):
+        size -= 1
+
+    while size > 1:
+        candidate = lst[:]
+        j = i
+        segment = lst[i : i+size]
+        while j + size <= len(candidate):
+            if segment == candidate[j : j+size]:
+                candidate[j : j+size] = [sub]
+            j += 1
+        candidates.append((segment, candidate))
+        size -= 1
 
     return candidates
 
-def reduce_list(moves):
-    segA =  find_segments(moves)
-    for a in segA:
-        lstA = remove_segments(moves, a, 'A')
-        segB = find_segments(lstA)
-        for b in segB:
-            lstB = remove_segments(lstA, b, 'B')
-            segC = find_segments(lstB)
-            for c in segC:
-                lstC = remove_segments(lstB, c, 'C')
+def reduce_all(moves):
+    for (segA, lstA) in reduce(moves, 'A'):
+        for (segB, lstB) in reduce(lstA, 'B'):
+            for (segC, lstC) in reduce(lstB, 'C'):
                 if all(v in 'ABC' for v in lstC):
-                    return [ lstC, moves[ a[0][0] : a[0][1] ], lstA[ b[0][0] : b[0][1] ], lstB[ c[0][0] : c[0][1] ] ]
+                    return [lstC, segA, segB, segC]
 
 moves = get_moves(scaffolding)
-instructions = '\n'.join(','.join(lst) for lst in reduce_list(moves)) + '\nn\n'
+instructions = '\n'.join(','.join(l) for l in reduce_all(moves)) + '\nn\n'
 
 pgm[0] = 2
 dust_amount = next(i for i in run(pgm, (ord(c) for c in instructions)) if i > 127)
