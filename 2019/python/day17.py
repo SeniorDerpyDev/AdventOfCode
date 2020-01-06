@@ -90,7 +90,7 @@ def get_moves(scaffolding):
     dx, dy = robot_dirs[s[y][x]]
 
     def is_scaffold(x, y):
-        return x >= 0 and x < width and y >= 0 and y < height and s[y][x] == '#'
+        return 0 <= x < width and 0 <= y < height and s[y][x] == '#'
 
     def turn_left():
         return dy, -dx

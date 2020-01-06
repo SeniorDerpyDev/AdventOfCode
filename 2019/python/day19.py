@@ -83,9 +83,9 @@ aprox_y = 99*(1+1/slope2)/(1/slope1-1/slope2)
 x, y = int(aprox_x), int(aprox_y)
 while True:
     last_x, last_y = x, y
-    while not(is_inside_tractor_beam(x + 99, y)):
+    while not is_inside_tractor_beam(x + 99, y):
         y += 1
-    while not(is_inside_tractor_beam(x, y + 99)):
+    while not is_inside_tractor_beam(x, y + 99):
         x += 1
     if (last_x, last_y) == (x, y):
         break
