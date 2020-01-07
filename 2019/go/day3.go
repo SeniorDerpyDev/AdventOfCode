@@ -2,10 +2,8 @@ package main
 
 import (
 	"AdventOfCode/util"
-	"bufio"
 	"fmt"
 	"math"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -16,21 +14,6 @@ type point struct {
 }
 
 type wire = map[point]int
-
-func readInput(file string) ([]string, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-
-	var input []string
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		input = append(input, scanner.Text())
-	}
-	return input, err
-}
 
 func parse(s string) wire {
 	result := make(wire)
@@ -81,7 +64,7 @@ func part2(wire0 wire, wire1 wire) int {
 }
 
 func main() {
-	paths, _ := readInput("../day_3.txt")
+	paths, _ := util.ReadInput("../day_3.txt")
 	wire0 := parse(paths[0])
 	wire1 := parse(paths[1])
 

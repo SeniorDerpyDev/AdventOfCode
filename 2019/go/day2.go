@@ -2,24 +2,9 @@ package main
 
 import (
 	"AdventOfCode/intcode"
-	"bufio"
+	"AdventOfCode/util"
 	"fmt"
-	"os"
 )
-
-func readInput(file string) (string, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return "", err
-	}
-	defer f.Close()
-
-	scanner := bufio.NewScanner(f)
-	if scanner.Scan() {
-		return scanner.Text(), nil
-	}
-	return "", fmt.Errorf("file is empty")
-}
 
 func part1(pgm string) int {
 	computer, _ := intcode.LoadProgram(pgm)
@@ -45,7 +30,8 @@ func part2(pgm string, expected int) int {
 }
 
 func main() {
-	pgm, _ := readInput("../day_2.txt")
+	input, _ := util.ReadInput("../day_2.txt")
+	pgm := input[0]
 	fmt.Printf("part 1: %d\n", part1(pgm))
 	fmt.Printf("part 2: %d\n", part2(pgm, 19690720))
 }
