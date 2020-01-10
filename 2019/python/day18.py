@@ -1,57 +1,75 @@
-from collections import defaultdict, deque
+from heapq import heappop, heappush
 
-adjacent = [(1, 0), (-1, 0), (0, -1), (0, 1)]
+neighbours = [(1, 0), (-1, 0), (0, -1), (0, 1)]
 
-def maze_info(txt, top_left=None, bottom_right=None):
-	x0, y0 = top_left if top_left else (0, 0)
-	x1, y1 = bottom_right if bottom_right else (len(maze[0]), len(maze))
-	start = (None, None)
-	keys = set()
-	for y in range(y0, y1):
-		for x in range(x0, x1):
-			c = maze[y][x]
-			if c == '@':
-				start = (x, y) 
-			if 'a' <= c <= 'z':
-				keys.add(c)
-	return start, keys
+def build_graph(maze):
+    graph = dict()
+    starts = []
+    i = 0
+    w, h = len(maze[0]), len(maze)
+    for y in range(h):
+        for x in range(w):
+            c = maze[y][x]
+            if 'a' <= c <= 'z' or c == '@':
+                if c == '@':
+                    c += str(i)
+                    i += 1
+                    starts.append(c)
+                graph[c] = find_adjacent(maze, (x, y))
+    return graph, starts
 
-def get_all_keys(maze, start, all_keys):
-	cells = deque([(*start, '', 0)])
-	visited = defaultdict(set)
+def find_adjacent(maze, start):
+    cells = [(*start, 0, set())]
+    visited = set()
+    adjacent = []
 
-	while cells:
-		(x, y, keys_found, steps) = cells.popleft()
-		c = maze[y][x] 
+    while cells:
+        (x, y, steps, doors) = cells.pop(0)
+        if (x, y) in visited:
+            continue
+        visited.add((x, y))
 
-		if c == '#':
-			continue		
-		if (x, y) in visited[frozenset(keys_found)]:
-			continue
-		if 'A' <= c <= 'Z':
-			door = c.lower()
-			if door in all_keys and door not in keys_found:
-				continue
+        c = maze[y][x]
+        if 'a' <= c <= 'z' and steps != 0:
+            adjacent.append((c, steps, doors))
+            continue
+        if 'A' <= c <= 'Z':
+            doors = doors | { c.lower() }
 
-		if 'a' <= c <= 'z' and c not in keys_found:
-			keys_found += c
-			if set(keys_found) == all_keys:
-				return steps
-		
-		cells.extend([(x + dx, y + dy, keys_found, steps + 1) for (dx, dy) in adjacent])
-		visited[frozenset(keys_found)].add((x, y))
+        cells.extend([(x+dx, y+dy, steps + 1, doors) for (dx, dy) in neighbours if maze[y+dy][x+dx] != '#'])
+    return adjacent
+
+def get_all_keys(g, starts, keys_to_collect):
+    q = []
+    heappush(q, (0, tuple(starts), frozenset()))
+    visited = set()
+    l = len(starts)
+
+    while q:
+        (steps, nodes, keys) = heappop(q)
+        if (nodes, keys) in visited:
+            continue
+        if keys == keys_to_collect:
+            return steps
+        for i in range(l):
+            lst = list(nodes)
+            for (next, dist, doors) in g[nodes[i]]:
+                if doors.issubset(keys):
+                    lst[i] = next
+                    heappush(q, (steps + dist, tuple(lst), keys | { next }))
+
+        visited.add((nodes, keys))
 
 with open('../day_18.txt', 'r') as f:
-	maze = [list(line) for line in f.read().splitlines()]
+    maze = [list(line) for line in f.read().splitlines()]
 
-print('part 1:', get_all_keys(maze, *maze_info(maze)))
+graph, starts = build_graph(maze)
+print('part 1:', get_all_keys(graph, starts, frozenset(graph.keys() - starts)))
+
 
 maze[39][39 : 42] = list('@#@')
 maze[40][39 : 42] = list('###')
 maze[41][39 : 42] = list('@#@')
 
-s1 = get_all_keys(maze, *maze_info(maze, (0, 0), (41, 41)))
-s2 = get_all_keys(maze, *maze_info(maze, (40, 0), (81, 41)))
-s3 = get_all_keys(maze, *maze_info(maze, (0, 40), (41, 81)))
-s4 = get_all_keys(maze, *maze_info(maze, (40, 40), (81, 81)))
-print('part 2:', s1 + s2 + s3 + s4)
+graph, starts = build_graph(maze)
+print('part 2:', get_all_keys(graph, starts, frozenset(graph.keys() - starts)))
