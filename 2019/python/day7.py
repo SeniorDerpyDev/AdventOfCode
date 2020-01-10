@@ -50,7 +50,7 @@ def run_amplifiers(phases, pgm):
 
     # feedback
     for s in signals:
-    	inputs.append(s)
+        inputs.append(s)
     return s
 
 with open('../day_7.txt', 'r') as f:

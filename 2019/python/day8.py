@@ -12,12 +12,12 @@ print('part 1:', counter['1'] * counter['2'])
 
 img = bytearray(b' ' * size)
 for layer in reversed(layers):
-	for i, c in enumerate(layer):
-		if c == '0':
-			img[i] = ord(' ')
-		elif c == '1':
-			img[i] = ord('#')
+    for i, c in enumerate(layer):
+        if c == '0':
+            img[i] = ord(' ')
+        elif c == '1':
+            img[i] = ord('#')
 
 print('part 2:')
 for i in range(0, size, width):
-	print(img[i:i+width].decode()) 
+    print(img[i:i+width].decode()) 
