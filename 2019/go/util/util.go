@@ -36,3 +36,11 @@ func Min(a int, b int) int {
 	}
 	return a
 }
+
+// Gcd returns the greatest common divisor of a and b.
+func Gcd(a int, b int) int {
+	for b != 0 {
+		a, b = b, a%b
+	}
+	return a
+}
