@@ -44,3 +44,8 @@ func Gcd(a int, b int) int {
 	}
 	return a
 }
+
+// Lcm returns the least common multiple of a and b.
+func Lcm(a int, b int) int {
+	return a * b / Gcd(a, b)
+}
