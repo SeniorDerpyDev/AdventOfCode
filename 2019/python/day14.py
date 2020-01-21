@@ -37,7 +37,7 @@ print('part 1:', ore)
 
 
 min_fuel = 10**12 // ore
-max_fuel = 3281820
+max_fuel = 2 * min_fuel
 
 while min_fuel < max_fuel:
     fuel = (max_fuel + min_fuel) // 2 + 1
