@@ -1,20 +1,40 @@
+def part1(signal):
+    lst = signal[:]
+    length = len(lst)
+    for _ in range(100):
+        prev = lst[:]
+        for i in range(length//2+1):
+            d, total = i + 1, 0
+            n = i
+            while n < length:
+                total += sum(prev[n : n+d])
+                n += d*4
+            n = i + d*2
+            while n < length:
+                total -= sum(prev[n : n+d])
+                n += d*4
+            lst[i] = abs(total) % 10
+        cumsum = 0
+        for i in range(length - 1, length//2, -1):
+            cumsum += lst[i]
+            lst[i] = cumsum % 10
+
+    return ''.join(str(i) for i in lst[:8])
+
+def part2(signal, offset):
+    lst = (signal * 10_000)[offset:]
+    length = len(lst)
+    for _ in range(100):
+        cumsum = 0
+        for i in range(length - 1, -1, -1):
+            cumsum += lst[i]
+            lst[i] = cumsum % 10
+    return ''.join(str(i) for i in lst[:8])
+
+
 with open('../day_16.txt', 'r') as f:
     input_signal = f.read().strip()
     signal = [int(c) for c in input_signal]
 
-lst = signal[:]
-length = len(lst)
-pattern = [0, 1, 0, -1]
-for _ in range(100):
-    for i in range(length):
-        lst[i] = abs(sum(pattern[(j + 1) // (i + 1) % 4] * lst[j] for j in range(i, length))) % 10
-print('part 1:', ''.join(str(i) for i in lst[:8]))
-
-
-offset = int(input_signal[0:7])
-lst = (signal * 10_000)[offset:]
-length = len(lst)
-for _ in range(100):
-    for i in range(length - 1, 0, -1):
-        lst[i-1] = (lst[i-1] + lst[i]) % 10
-print('part 2:', ''.join(str(i) for i in lst[:8]))
+print('part 1:', part1(signal))
+print('part 2:', part2(signal, int(input_signal[0:7])))
