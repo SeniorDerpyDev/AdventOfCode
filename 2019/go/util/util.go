@@ -29,6 +29,14 @@ func Abs(n int) int {
 	return n
 }
 
+// Max returns the larger of a or b.
+func Max(a int, b int) int {
+	if a < b {
+		return b
+	}
+	return a
+}
+
 // Min returns the smaller of a or b.
 func Min(a int, b int) int {
 	if a > b {
