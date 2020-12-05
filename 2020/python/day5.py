@@ -1,18 +1,10 @@
+from functools import reduce
+
 with open('../day_5.txt', 'r') as f:
     trans = str.maketrans('FBLR', '0101')
     passes = [int(s.rstrip().translate(trans), 2) for s in f]
-    passes.sort()
 
-p1 = passes[-1]
+(min_id, max_id, total) = reduce(lambda acc, id : (min(acc[0], id), max(acc[1], id), acc[2] + id), passes, (1024, 0, 0))
 
-lo, hi = 0, len(passes)
-while lo != hi:
-    m = lo + (hi - lo) // 2
-    if passes[m] == passes[0] + m:
-        lo = m + 1
-    else:
-        hi = m
-p2 = passes[0] + lo
-
-print('part 1:', p1)
-print('part 1:', p2)
+print('part 1:', max_id)
+print('part 1:', (max_id + min_id) * (max_id - min_id + 1) // 2 - total)
