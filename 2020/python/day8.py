@@ -1,11 +1,11 @@
 with open('../day_8.txt', 'r') as f:
-    pgm = [[op, int(n)] for op, n in (line.split() for line in f)]
+    pgm = [(op, int(n)) for op, n in (line.split() for line in f)]
 
 def run(pgm):
     ip, acc = 0, 0
-    run = set()
-    while ip not in run and ip < len(pgm):
-        run.add(ip)
+    executed = set()
+    while ip not in executed and ip < len(pgm):
+        executed.add(ip)
         op, arg = pgm[ip]
         if op == 'acc':
             acc += arg
@@ -23,7 +23,7 @@ def run_all(pgm):
             continue
 
         fixed = list(pgm)
-        fixed[i] = ['nop', arg] if op == 'jmp' else ['jmp', arg]
+        fixed[i] = ('nop', arg) if op == 'jmp' else ['jmp', arg]
         acc, finished = run(fixed)
         if finished:
             return acc

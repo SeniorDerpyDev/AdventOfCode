@@ -7,4 +7,4 @@ with open('../day_5.txt', 'r') as f:
 (min_id, max_id, total) = reduce(lambda acc, id : (min(acc[0], id), max(acc[1], id), acc[2] + id), passes, (1024, 0, 0))
 
 print('part 1:', max_id)
-print('part 1:', (max_id + min_id) * (max_id - min_id + 1) // 2 - total)
+print('part 2:', (max_id + min_id) * (max_id - min_id + 1) // 2 - total)

@@ -10,4 +10,4 @@ p1 = sum(1 for low, high, c, pwd in passwords if low <= pwd.count(c) <= high)
 p2 = sum(1 for low, high, c, pwd in passwords if (pwd[low-1] == c) != (pwd[high-1] == c))
 
 print('part 1:', p1)
-print('part 1:', p2)
+print('part 2:', p2)

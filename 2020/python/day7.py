@@ -5,7 +5,7 @@ with open('../day_7.txt', 'r') as f:
             (line.rstrip(".\n").split(" bags contain") for line in f) }
 
 def part1(bag):
-    s = set() 
+    s = set()
     def impl(bag):
         for k, v in rules.items():
             if any(b == bag for _, b in v):
@@ -16,7 +16,7 @@ def part1(bag):
     return len(s)
 
 def part2(bag):
-    return sum(n + n * part2(b) for n, b in rules[bag]) if bag in rules else 0
+    return sum(n + n * part2(b) for n, b in rules[bag])
 
 print("part 1:", part1("shiny gold"))
 print("part 2:", part2("shiny gold"))
