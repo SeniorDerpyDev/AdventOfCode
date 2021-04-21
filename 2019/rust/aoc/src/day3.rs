@@ -33,7 +33,7 @@ fn parse(str: &String) -> HashMap<(i32, i32), i32> {
             "L" => (-1, 0),
             "U" => (0, 1),
             "D" => (0, -1),
-            _ => panic!("invalid direction"),
+            _ => unreachable!(),
         };
         for _ in 0..len {
             x += dx;

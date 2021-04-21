@@ -7,7 +7,7 @@ mod day3;
 fn read_input(path: String) -> std::io::Result<Vec<String>> {
     let file = File::open(path)?;
     let lines = BufReader::new(file).lines();
-    Ok(lines.map(|l| l.unwrap()).collect::<Vec<String>>())
+    Ok(lines.map(|l| l.unwrap()).collect())
 }
 
 fn main() {
