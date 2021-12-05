@@ -11,27 +11,20 @@ boards = input.collect do |b|
   board
 end
 
-def run1(rng, boards)
+def run(rng, boards)
   rng.each do |n|
     boards.each do |b|
-      b[:cols].each { |c| c.delete(n); return [b, n] if c.empty? }
-      b[:rows].each { |r| r.delete(n); return [b, n] if r.empty? }
-    end
-  end
-end
-
-bingo, n = run1(rng, boards)
-print("part 1: ", n*bingo[:cols].collect { |c| c.each.sum }.sum, "\n")
-
-def run2(rng, boards)
-  rng.each do |n|
-    boards.each do |b|
-      b[:cols].each { |c| c.delete(n); return [b, n] if c.empty? and boards.length == 1 }
-      b[:rows].each { |r| r.delete(n); return [b, n] if r.empty? and boards.length == 1 }
+      b[:cols].each { |c| c.delete(n); yield [b, n] if c.empty? }
+      b[:rows].each { |r| r.delete(n); yield [b, n] if r.empty? }
     end
     boards = boards.reject { |b| b[:cols].any? &:empty? }.reject { |b| b[:rows].any? &:empty? }
   end
 end
 
-bingo, n = run2(rng, boards)
-print("part 2: ", n*bingo[:cols].collect { |c| c.each.sum }.sum, "\n")
+bingos = []
+run(rng, boards) { |r| bingos << r }
+
+board, n = bingos.first
+print("part 1: ", n*board[:cols].collect { |c| c.each.sum }.sum, "\n")
+board, n = bingos.last
+print("part 2: ", n*board[:cols].collect { |c| c.each.sum }.sum, "\n")
